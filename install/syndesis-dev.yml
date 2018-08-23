@@ -33,6 +33,10 @@ parameters:
   description: The name of the OpenShift project Syndesis is being deployed into.
   displayName: OpenShift project to deploy into
   required: true
+- name: USER_NAMESPACE
+  description: The namespace where the Syndesis service instance is provisioned
+  displayName: Openshift project to provision the Syndesis service into
+  required: false
 - name: OPENSHIFT_OAUTH_CLIENT_SECRET
   description: OpenShift OAuth client secret
   generate: expression
@@ -928,7 +932,7 @@ objects:
             - --skip-auth-preflight
             - --openshift-ca=/etc/pki/tls/certs/ca-bundle.crt
             - --openshift-ca=/var/run/secrets/kubernetes.io/serviceaccount/ca.crt
-            - --openshift-sar={"namespace":"${OPENSHIFT_PROJECT}","resource":"pods","verb":"get"}
+            - --openshift-sar={"namespace":"${USER_NAMESPACE}","resource":"pods","verb":"get"}
             # Disabled for now: --pass-user-bearer-token as this requires extra permission which only
             # can be given by a cluster-admin
           env:
