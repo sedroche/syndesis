@@ -4,7 +4,7 @@
 GO_BUILDER_IMAGE="syndesis/godev:1.10"
 
 # Name of the operator image
-OPERATOR_IMAGE="syndesis/syndesis-operator"
+OPERATOR_IMAGE="maleck13/syndesis-operator"
 
 dep_ensure() {
     local operator_dir=${1}

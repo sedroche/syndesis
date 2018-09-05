@@ -1,12 +1,13 @@
 package util
 
 import (
+	"github.com/operator-framework/operator-sdk/pkg/util/k8sutil"
 	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
 	"k8s.io/apimachinery/pkg/runtime"
-	"github.com/operator-framework/operator-sdk/pkg/util/k8sutil"
 
 	"io/ioutil"
 	"strings"
+
 	"k8s.io/apimachinery/pkg/util/yaml"
 )
 
@@ -31,7 +32,7 @@ func LoadKubernetesResource(jsonData []byte) (runtime.Object, error) {
 		return nil, err
 	}
 
-	obj := k8sutil.RuntimeObjectFromUnstructured(&u)
+	obj, _ := k8sutil.RuntimeObjectFromUnstructured(&u)
 	return obj, nil
 }
 

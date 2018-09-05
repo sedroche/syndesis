@@ -200,7 +200,15 @@
   version = "v3.9.0"
 
 [[projects]]
-  branch = "master"
+  name = "github.com/openshift/client-go"
+  packages = [
+    "route/clientset/versioned/scheme",
+    "route/clientset/versioned/typed/route/v1"
+  ]
+  revision = "1fa528d3be060e4c7178eb69e76d37cf7e699e3c"
+  version = "v3.9.0"
+
+[[projects]]
   name = "github.com/operator-framework/operator-sdk"
   packages = [
     "pkg/k8sclient",
@@ -209,7 +217,8 @@
     "pkg/util/k8sutil",
     "version"
   ]
-  revision = "055def4bae6766c24a27fc75c41b790c8e671b7e"
+  revision = "cb89692cdd145f084798749c16baaf44a6e62cac"
+  version = "v0.0.6"
 
 [[projects]]
   branch = "master"
@@ -222,6 +231,12 @@
   packages = ["."]
   revision = "5f041e8faa004a95c88a202771f4cc3e991971e6"
   version = "v2.0.1"
+
+[[projects]]
+  name = "github.com/pkg/errors"
+  packages = ["."]
+  revision = "645ef00459ed84a119197bfb8d8205042c6df63d"
+  version = "v0.8.0"
 
 [[projects]]
   name = "github.com/pmezard/go-difflib"
@@ -492,6 +507,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "eca0f31a74d08e669a57ddd2ea6de989ca88e70f34c72a37f46a35ac656a1b05"
+  inputs-digest = "bf15fb006200faab37d0f33ac837d5514d7bb537b79d214846cb23435d6e981f"
   solver-name = "gps-cdcl"
   solver-version = 1

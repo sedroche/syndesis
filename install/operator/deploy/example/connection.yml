@@ -1,0 +1,12 @@
+apiVersion: syndesis.io/v1alpha1
+kind: Connection
+metadata:
+  name: example
+spec: 
+  username: "user-ce302285-b1be-11e8-aff2-0a580a010006"
+  password: "uG0NG6D3HdJKwhAuyp8w/b22pfPBFGCuzjep9NERf7s="
+  url: "amqp://messaging.integration-phils-test-enmasse.svc:5672?amqp.saslMechanisms=PLAIN"
+
+status:
+  ready: false
+  

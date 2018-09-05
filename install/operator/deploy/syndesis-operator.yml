@@ -24,6 +24,7 @@ rules:
   resources:
   - syndesises
   - syndesises/finalizers
+  - connections
   verbs: [ get, list, create, update, delete, deletecollection, watch ]
 - apiGroups:
   - ""
@@ -78,6 +79,31 @@ rules:
   - routes
   - routes/custom-host
   verbs: [ get, list, create, update, delete, deletecollection, watch]
+---
+kind: Role
+apiVersion: rbac.authorization.k8s.io/v1beta1
+metadata:
+  name: configmap-reader
+rules:
+- apiGroups:
+  - ""
+  resources:
+  - configmaps
+  verbs: [ get, list, watch]
+---
+kind: RoleBinding
+apiVersion: rbac.authorization.k8s.io/v1beta1
+metadata:
+  name: read-configmaps
+  namespace: enmasse
+subjects:
+- kind: ServiceAccount
+  name: syndesis-operator
+  apiGroup: rbac.authorization.k8s.io
+roleRef:
+  kind: Role
+  name: configmap-reader
+  apiGroup: rbac.authorization.k8s.io
 ---
 kind: RoleBinding
 apiVersion: rbac.authorization.k8s.io/v1beta1

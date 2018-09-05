@@ -2,7 +2,10 @@ package main
 
 import (
 	"context"
+	"io/ioutil"
+	"os"
 	"runtime"
+	"time"
 
 	"github.com/syndesisio/syndesis/install/operator/pkg/syndesis/legacy"
 
@@ -14,15 +17,16 @@ import (
 	sdkVersion "github.com/operator-framework/operator-sdk/version"
 	"github.com/syndesisio/syndesis/install/operator/pkg/stub"
 
-	"github.com/sirupsen/logrus"
 	"flag"
+
+	"github.com/sirupsen/logrus"
 	configuration "github.com/syndesisio/syndesis/install/operator/pkg/syndesis/configuration"
 )
 
 func printVersion() {
 	logrus.Infof("Go Version: %s", runtime.Version())
 	logrus.Infof("Go OS/Arch: %s/%s", runtime.GOOS, runtime.GOARCH)
-	logrus.Infof("operator-sdk Version: %v", sdkVersion.Version)
+	logrus.Infof("operatorof the Syndesis infrastructure elements-sdk Version: %v", sdkVersion.Version)
 }
 
 func main() {
@@ -32,6 +36,16 @@ func main() {
 	flag.Parse()
 	logrus.Infof("Using template %s", *configuration.TemplateLocation)
 
+	var token = os.Getenv("SA_TOKEN")
+	if token == "" {
+		//read token from file
+		data, err := ioutil.ReadFile("/var/run/secrets/kubernetes.io/serviceaccount/token")
+		if err != nil {
+			panic(err)
+		}
+		token = string(data)
+	}
+
 	resource := "syndesis.io/v1alpha1"
 	kind := "Syndesis"
 	namespace, err := k8sutil.GetWatchNamespace()
@@ -39,14 +53,14 @@ func main() {
 		logrus.Fatalf("Failed to get watch namespace: %v", err)
 	}
 
-	resyncPeriod := 5
 	ctx := context.TODO()
 
 	legacyController := legacy.NewLegacyController(namespace)
 	legacyController.Start(ctx)
 
-	logrus.Infof("Watching %s, %s, %s, %d", resource, kind, namespace, resyncPeriod)
-	sdk.Watch(resource, kind, namespace, resyncPeriod)
-	sdk.Handle(stub.NewHandler())
+	sdk.Watch(resource, "Connection", namespace, 10*time.Second)
+	sdk.Watch(resource, kind, namespace, 10*time.Second)
+	sdk.Watch("v1", "ConfigMap", namespace, 10*time.Second)
+	sdk.Handle(stub.NewHandler(token))
 	sdk.Run(ctx)
 }

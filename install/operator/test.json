@@ -1,0 +1,109 @@
+{
+  "kind": "DeploymentConfig",
+  "apiVersion": "apps.openshift.io/v1",
+  "metadata": {
+    "name": "sso-postgresql",
+    "creationTimestamp": null,
+    "labels": {
+      "application": "sso",
+      "template": "sso72-x509-postgresql-persistent",
+      "xpaas": "1.4.15"
+    }
+  },
+  "spec": {
+    "strategy": {
+      "type": "Recreate",
+      "resources": {}
+    },
+    "triggers": [{
+      "type": "ImageChange",
+      "imageChangeParams": {
+        "automatic": true,
+        "containerNames": ["sso-postgresql"],
+        "from": {
+          "kind": "ImageStreamTag",
+          "namespace": "openshift",
+          "name": "postgresql:9.5"
+        }
+      }
+    }, {
+      "type": "ConfigChange"
+    }],
+    "replicas": 1,
+    "test": false,
+    "selector": {
+      "deploymentConfig": "sso-postgresql"
+    },
+    "template": {
+      "metadata": {
+        "name": "sso-postgresql",
+        "creationTimestamp": null,
+        "labels": {
+          "application": "sso",
+          "deploymentConfig": "sso-postgresql"
+        }
+      },
+      "spec": {
+        "volumes": [{
+          "name": "sso-postgresql-pvol",
+          "persistentVolumeClaim": {
+            "claimName": "sso-postgresql-claim"
+          }
+        }],
+        "containers": [{
+          "name": "sso-postgresql",
+          "image": "postgresql",
+          "ports": [{
+            "containerPort": 5432,
+            "protocol": "TCP"
+          }],
+          "env": [{
+            "name": "POSTGRESQL_USER",
+            "value": "userN7j"
+          }, {
+            "name": "POSTGRESQL_PASSWORD",
+            "value": "KewwmOu7CHNhk6n5PssH3KLHr3vyRhUf"
+          }, {
+            "name": "POSTGRESQL_DATABASE",
+            "value": "root"
+          }, {
+            "name": "POSTGRESQL_MAX_CONNECTIONS"
+          }, {
+            "name": "POSTGRESQL_MAX_PREPARED_TRANSACTIONS"
+          }, {
+            "name": "POSTGRESQL_SHARED_BUFFERS"
+          }],
+          "resources": {},
+          "volumeMounts": [{
+            "name": "sso-postgresql-pvol",
+            "mountPath": "/var/lib/pgsql/data"
+          }],
+          "livenessProbe": {
+            "tcpSocket": {
+              "port": 5432
+            },
+            "initialDelaySeconds": 30,
+            "timeoutSeconds": 1
+          },
+          "readinessProbe": {
+            "exec": {
+              "command": ["/bin/sh", "-i", "-c", "psql -h 127.0.0.1 -U $POSTGRESQL_USER -q -d $POSTGRESQL_DATABASE -c 'SELECT 1'"]
+            },
+            "initialDelaySeconds": 5,
+            "timeoutSeconds": 1
+          },
+          "imagePullPolicy": "Always"
+        }],
+        "terminationGracePeriodSeconds": 60
+      }
+    }
+  },
+  "status": {
+    "latestVersion": 0,
+    "observedGeneration": 0,
+    "replicas": 0,
+    "updatedReplicas": 0,
+    "availableReplicas": 0,
+    "unavailableReplicas": 0
+  }
+}
