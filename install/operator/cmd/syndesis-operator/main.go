@@ -60,7 +60,9 @@ func main() {
 
 	sdk.Watch(resource, "Connection", namespace, 10*time.Second)
 	sdk.Watch(resource, kind, namespace, 10*time.Second)
-	sdk.Watch("v1", "ConfigMap", namespace, 10*time.Second, sdk.WithLabelSelector("type=address-space"))
+	if os.Getenv("ENABLE_ENMASSE") != "false" {
+		sdk.Watch("v1", "ConfigMap", namespace, 10*time.Second, sdk.WithLabelSelector("type=address-space"))
+	}
 	sdk.Handle(stub.NewHandler(token))
 	sdk.Run(ctx)
 }
