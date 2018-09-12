@@ -142,7 +142,7 @@ spec:
   - from:
       kind: DockerImage
       # Keep tag 'latest' here, its used as an anchor in the release script
-      name: docker.io/syndesis/syndesis-operator:latest
+      name: quay.io/integreatly/syndesis-operator:latest
     importPolicy:
       scheduled: true
     # Keep 'latest' here (including single quotes), its used as a pattern anchor in the release script
